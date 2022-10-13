@@ -1,4 +1,6 @@
 import requests
+import logging
+
 from requests_toolbelt import sessions
 
 from .models.products import Products
@@ -57,6 +59,11 @@ class Swell:
         session = requests.Session()
         session.auth = (store_id, api_key)
         self._session = session
+
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.addHandler(logging.NullHandler())
+
 
         self.products = Products(self)
         self.accounts = Accounts(self)
