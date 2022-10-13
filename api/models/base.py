@@ -36,7 +36,7 @@ class Base():
         """
 
         response = self._swell._session.get(url=f'{self._swell._base_url}/{self.endpoint}', params=params)
-        return handle_requests_response(response)
+        return handle_requests_response(self._swell, response)
 
 
     def get(self, id: str, params: Optional[dict] = None) -> dict:
@@ -60,7 +60,7 @@ class Base():
             
         response = self._swell._session.get(url=f'{self._swell._base_url}/{self.endpoint}/{id}', params=params)
 
-        return handle_requests_response(response)
+        return handle_requests_response(self._swell, response)
 
 
     def create(self, payload: dict) -> dict:
@@ -82,7 +82,7 @@ class Base():
 
         response = self._swell._session.post(url=f'{self._swell._base_url}/{self.endpoint}/', json=payload)
 
-        return handle_requests_response(response)
+        return handle_requests_response(self._swell, response)
 
 
     def update(self, payload: dict) -> dict:
@@ -104,7 +104,7 @@ class Base():
             
         response = self._swell._session.put(url=f'{self._swell._base_url}/{self.endpoint}/{payload["id"]}', json=payload)
 
-        return handle_requests_response(response)
+        return handle_requests_response(self._swell, response)
 
 
     def delete(self, id: str) -> dict:
@@ -124,5 +124,5 @@ class Base():
         
         response = self._swell._session.delete(url=f'{self._swell._base_url}/{self.endpoint}/{id}')
 
-        return handle_requests_response(response)
+        return handle_requests_response(self._swell, response)
     

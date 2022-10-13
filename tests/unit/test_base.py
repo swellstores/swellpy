@@ -1,21 +1,27 @@
 import unittest
 from unittest.mock import MagicMock
 from api.models.base import Base
+import logging
 class TestBaseClass(unittest.TestCase):
 
     @classmethod
-    def setUp(self):
+    def setUp(cls):
         class SessionMock:
             def __init__(self):
                 self.get = MagicMock()
                 self.put = MagicMock()
                 self.post = MagicMock()
                 self.delete = MagicMock()
-
+                
+                self.get.return_value.status_code = 200
+                self.put.return_value.status_code = 200
+                self.post.return_value.status_code = 200
+                self.delete.return_value.status_code = 200
         class SwellMock:
             def __init__(self):
                 self._session = SessionMock()
                 self._base_url = 'https://store_id:api_key'
+                self.logger = MagicMock()
 
         global base_model, name, endpoint, required_fields, swell
 

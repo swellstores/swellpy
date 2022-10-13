@@ -11,6 +11,7 @@ class TestEvents(unittest.TestCase):
         class SessionMock:
             def __init__(self):
                 self.get = MagicMock()
+                self.get.return_value.status_code = 200
 
         class SwellMock:
             def __init__(self):

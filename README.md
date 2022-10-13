@@ -35,12 +35,12 @@ This may evolve to return individual classes with advanced processing and method
 ## Getting Setup
 
 1. Import Swell-Py
-```
+```python
 from swell-py import Swell
 ```
 
 2. Instantiate a new Swell instance:
-```
+```python
     swell = Swell({
         store_id= "SWELL_STORE_ID",
         api_key= "SWELL_API_KEY"
@@ -48,7 +48,7 @@ from swell-py import Swell
 ```
 
 3. Request resource
-```
+```python
 response = swell.products.create({'name': '1234567'})
 ```
 
@@ -61,3 +61,22 @@ using your favorite technologies, and provide admins with an easy to use dashboa
 ## Documentation
 
 📖  [**View Swell Backend API Documentation**](https://developers.swell.is/backend-api/introduction)
+
+## Handling log messages
+
+SwellPy uses the standard Logging library to log HTTP requests (DEBUG level).
+To capture these logs, a handler can be configured as shown:
+
+```python
+import logging
+import sys
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+```
