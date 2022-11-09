@@ -1,6 +1,5 @@
 from ..base import Base
-from .stock import ProductStock
-from .variants import ProductVariants
+
 
 class Products(Base):
     """Products represent items that can be sold to a customer, 
@@ -13,5 +12,3 @@ class Products(Base):
         super().__init__(swell, 'products', required_fields=['name'])
         
         self._swell = swell
-        self.stock = ProductStock(swell)
-        self.variants = ProductVariants(swell)

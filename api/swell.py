@@ -4,12 +4,21 @@ import logging
 from requests_toolbelt import sessions
 
 from .models.products import Products
+from .models.products.stock import ProductStock
+from .models.products.variants import ProductVariants
 from .models.accounts import Accounts
+from .models.accounts.addresses import AccountAddresses
+from .models.accounts.cards import AccountCards
+from .models.accounts.credits import AccountCredits
 from .models.carts import Carts
 from .models.orders import Orders
 from .models.coupons import Coupons
+from .models.coupons.uses import CouponUses
+from .models.coupons.generations import CouponGenerations
 from .models.promotions import Promotions
+from .models.promotions.uses import PromotionUses
 from .models.giftcards import Giftcards
+from .models.giftcards.debits import Debits
 from .models.categories import Categories
 from .models.attributes import Attributes
 from .models.purchase_links import PurchaseLinks
@@ -17,6 +26,7 @@ from .models.invoices import Invoices
 from .models.events import Events
 from .models.subscriptions import Subscriptions
 from .models.payments import Payments
+from .models.payments.refunds import Refunds
 from .models.returns import Returns
 from .models.shipments import Shipments
 from .models.webhooks import Webhooks
@@ -25,12 +35,6 @@ class Swell:
     """
     The Swell class provides convenient access to Swell's API
 
-    To instantiate a new instance, call:
-
-    swellpy.Swell({
-        store_id= "SWELL_STORE_ID",
-        api_key= "SWELL_API_KEY"
-    )}
     """
 
     def __init__(
@@ -66,12 +70,21 @@ class Swell:
 
 
         self.products = Products(self)
+        self.stock = ProductStock(self)
+        self.variants = ProductVariants(self)
         self.accounts = Accounts(self)
+        self.addresses = AccountAddresses(self)
+        self.credits = AccountCredits(self)
+        self.cards = AccountCards(self)
         self.carts = Carts(self)
         self.orders = Orders(self)
         self.coupons = Coupons(self)
+        self.coupon_uses = CouponUses(self)
+        self.coupon_generations = CouponGenerations(self)
         self.promotions = Promotions(self)
+        self.promotion_uses = PromotionUses(self)
         self.giftcards = Giftcards(self) 
+        self.debits = Debits(self)
         self.categories = Categories(self)
         self.attributes = Attributes(self)
         self.purchase_links = PurchaseLinks(self)
@@ -79,6 +92,7 @@ class Swell:
         self.events = Events(self)
         self.subscriptions = Subscriptions(self)
         self.payments = Payments(self)
+        self.refunds = Refunds(self)
         self.returns = Returns(self)
         self.shipments = Shipments(self)
         self.webhooks = Webhooks(self)

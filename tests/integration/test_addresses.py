@@ -11,7 +11,7 @@ def address_keys():
 def test_list_addresses(swell):
     """Tests list all addresses"""
 
-    response = swell.accounts.addresses.list()
+    response = swell.addresses.list()
 
     assert isinstance(response, dict)
     assert isinstance(response['results'], list)
@@ -24,7 +24,7 @@ def test_list_addresses_date_filter(swell):
 
     timestamp = datetime.now()
 
-    date_filtered = swell.accounts.addresses.list({
+    date_filtered = swell.addresses.list({
         "date_created": { "$gte": timestamp },
     })
 
@@ -40,7 +40,7 @@ def test_list_addresses_with_return_limit(swell):
     """Tests list addresses return limit"""
 
     limit = 1
-    response = swell.accounts.addresses.list({"limit": limit})
+    response = swell.addresses.list({"limit": limit})
     results_length = len(response['results'])
 
     assert isinstance(response, dict)
@@ -54,7 +54,7 @@ def test_list_addresses_with_return_limit(swell):
 def test_list_addresses_expansion(swell):
     """Tests addresses expansion param is correctly sent"""
 
-    response = swell.accounts.addresses.list({"expand": ["parent"]})
+    response = swell.addresses.list({"expand": ["parent"]})
     parent = response['results'][0]['parent']
 
     assert isinstance(parent, dict)
@@ -64,10 +64,10 @@ def test_list_addresses_expansion(swell):
 def test_get_addresses_by_account_id(swell, address_keys):
     """Tests get addresses by account id"""
 
-    response = swell.accounts.addresses.list()
+    response = swell.addresses.list()
     first_account_id = response['results'][0]['id']
     
-    id_response = swell.accounts.addresses.get(first_account_id)
+    id_response = swell.addresses.get(first_account_id)
 
     assert set(address_keys).issubset(id_response.keys()), "All keys should be in the response"
 
@@ -76,18 +76,18 @@ def test_fails_with_incorrect_id_get_account_addresses(swell):
     """Test fails with incorrect id type during get account addresses"""
 
     with pytest.raises(TypeError):
-        swell.accounts.addresses.get(123)
+        swell.addresses.get(123)
 
 
 @vcr.use_cassette('tests/vcr_cassettes/addresses/test-get-addresses-expanded.yml')
 def test_get_account_addresses_expanded(swell, address_keys):
     """Tests get account addresses expanded"""
 
-    response = swell.accounts.addresses.list()
+    response = swell.addresses.list()
     first_account_id = response['results'][0]['id']
     address_keys.append('parent')
 
-    id_response = swell.accounts.addresses.get(first_account_id, { "expand": ['parent'] })
+    id_response = swell.addresses.get(first_account_id, { "expand": ['parent'] })
 
     assert set(address_keys).issubset(id_response.keys()), "All keys should be in the response"
 
@@ -96,7 +96,7 @@ def test_get_account_addresses_expanded(swell, address_keys):
 def test_create_account_address(swell, address_keys):
     """Tests create new account address"""
 
-    response = swell.accounts.addresses.list()
+    response = swell.addresses.list()
     first_account_id = response['results'][0]['id']
     
     new_account_address = {
@@ -108,7 +108,7 @@ def test_create_account_address(swell, address_keys):
         'country': 'US'
     }
 
-    response = swell.accounts.addresses.create(new_account_address)
+    response = swell.addresses.create(new_account_address)
 
     assert set(address_keys).issubset(response.keys()), "All keys should be in the response"
     assert isinstance(response['id'], str)
@@ -119,13 +119,13 @@ def test_fails_with_no_id(swell):
     """Tests fail when no parent id is provided"""
 
     with pytest.raises(ValueError):
-        swell.accounts.addresses.create({"address1": "123 test st."})
+        swell.addresses.create({"address1": "123 test st."})
 
 def test_fails_with_no_address1(swell):
     """Tests fail when no address1 is provided"""
 
     with pytest.raises(ValueError):
-        swell.accounts.addresses.create({"parent_id": "123"})
+        swell.addresses.create({"parent_id": "123"})
 
 
 
@@ -133,7 +133,7 @@ def test_fails_with_no_address1(swell):
 def test_update_account_address(swell, address_keys):
     """Tests updating an account address"""
 
-    response = swell.accounts.addresses.list()
+    response = swell.addresses.list()
     first_account_address_id = response['results'][0]['id']
     
     updates = {
@@ -141,7 +141,7 @@ def test_update_account_address(swell, address_keys):
         "address1": "new address 321"
     }
 
-    update_response = swell.accounts.addresses.update(updates)
+    update_response = swell.addresses.update(updates)
     assert set(address_keys).issubset(update_response.keys())
     assert update_response["address1"] == updates["address1"]
 
@@ -150,26 +150,26 @@ def test_fails_with_no_id_update_account_address(swell):
     """Tests fails with missing id during account address update"""
 
     with pytest.raises(Exception):
-        swell.accounts.addresses.update({ "address1": "123 test" })
+        swell.addresses.update({ "address1": "123 test" })
 
 
 def test_fails_with_incorrect_id_update_account_address(swell):
     """Tests fails with incorrect id type during account address update"""
 
     with pytest.raises(TypeError):
-        swell.accounts.addresses.update({ "id": 123, "address1": "123 test"})
+        swell.addresses.update({ "id": 123, "address1": "123 test"})
 
 
 @vcr.use_cassette('tests/vcr_cassettes/addresses/test-delete-account-address.yml')
 def test_delete_account(swell, address_keys):
     """Tests deleting an account address"""
 
-    response = swell.accounts.addresses.list()
+    response = swell.addresses.list()
     first_account_id = response['results'][0]['id']
 
     assert isinstance(first_account_id, str)
     
-    delete_response = swell.accounts.addresses.delete(first_account_id)
+    delete_response = swell.addresses.delete(first_account_id)
     assert set(address_keys).issubset(delete_response.keys()), "All keys should be in the response"
 
 
@@ -177,11 +177,11 @@ def test_failed_with_no_id_delete_account_address(swell):
     """Test fails when no id provided to delete a account address"""
 
     with pytest.raises(Exception):
-        swell.accounts.addresses.delete(123)
+        swell.addresses.delete(123)
 
 
 def test_failed_with_incorrect_id_type_delete_account_address(swell):
     """Test fails when incorrect id type provided to delete an account address"""
 
     with pytest.raises(TypeError):
-        swell.accounts.addresses.delete(123)
+        swell.addresses.delete(123)

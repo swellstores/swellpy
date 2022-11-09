@@ -1,5 +1,4 @@
 from ..base import Base
-from .refunds import Refunds
 
 class Payments(Base):
     """When a store accepts payment of any kind, a record is kept 
@@ -12,7 +11,5 @@ class Payments(Base):
         super().__init__(swell, 'payments', required_field=['account_id', 'amount', 'method'])
         
         self._swell = swell
-        self.refunds = Refunds(swell)
-
 
 

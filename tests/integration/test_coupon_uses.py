@@ -11,7 +11,7 @@ def use_keys():
 def test_list_uses(swell):
     """Tests list all uses"""
 
-    response = swell.coupons.uses.list()
+    response = swell.coupon_uses.list()
 
     assert isinstance(response, dict)
     assert isinstance(response['results'], list)
@@ -24,7 +24,7 @@ def test_list_uses_date_filter(swell):
 
     timestamp = datetime.now()
 
-    date_filtered = swell.coupons.uses.list({
+    date_filtered = swell.coupon_uses.list({
         "date_created": { "$gte": timestamp },
     })
 
@@ -40,7 +40,7 @@ def test_list_uses_with_return_limit(swell):
     """Tests list uses return limit"""
 
     limit = 1
-    response = swell.coupons.uses.list({"limit": limit})
+    response = swell.coupon_uses.list({"limit": limit})
     results_length = len(response['results'])
 
     assert isinstance(response, dict)
@@ -54,7 +54,7 @@ def test_list_uses_with_return_limit(swell):
 def test_list_uses_expansion(swell):
     """Tests uses expansion param is correctly sent"""
 
-    response = swell.coupons.uses.list({"expand": ["parent"]})
+    response = swell.coupon_uses.list({"expand": ["parent"]})
     parent = response['results'][0]['parent']
 
     assert isinstance(parent, dict)
@@ -64,10 +64,10 @@ def test_list_uses_expansion(swell):
 def test_get_uses_by_coupon_id(swell, use_keys):
     """Tests get uses by coupon id"""
 
-    response = swell.coupons.uses.list()
+    response = swell.coupon_uses.list()
     first_coupon_id = response['results'][0]['id']
     
-    id_response = swell.coupons.uses.get(first_coupon_id)
+    id_response = swell.coupon_uses.get(first_coupon_id)
 
     assert set(use_keys).issubset(id_response.keys()), "All keys should be in the response"
 
@@ -76,18 +76,18 @@ def test_fails_with_incorrect_id_get_coupon_uses(swell):
     """Test fails with incorrect id type during get coupon uses"""
 
     with pytest.raises(TypeError):
-        swell.coupons.uses.get(123)
+        swell.coupon_uses.get(123)
 
 
 @vcr.use_cassette('tests/vcr_cassettes/uses/test-get-uses-expanded.yml')
 def test_get_coupon_uses_expanded(swell, use_keys):
     """Tests get coupon uses expanded"""
 
-    response = swell.coupons.uses.list()
+    response = swell.coupon_uses.list()
     first_coupon_id = response['results'][0]['id']
     use_keys.append('parent')
 
-    id_response = swell.coupons.uses.get(first_coupon_id, { "expand": ['parent'] })
+    id_response = swell.coupon_uses.get(first_coupon_id, { "expand": ['parent'] })
 
     assert set(use_keys).issubset(id_response.keys()), "All keys should be in the response"
 
@@ -107,7 +107,7 @@ def test_create_coupon_use(swell, use_keys):
 
     }
 
-    response = swell.coupons.uses.create(new_coupon_use)
+    response = swell.coupon_uses.create(new_coupon_use)
 
     assert set(use_keys).issubset(response.keys()), "All keys should be in the response"
     assert isinstance(response['id'], str)
@@ -118,25 +118,25 @@ def test_fails_with_no_id(swell):
     """Tests fail when no parent id is provided"""
 
     with pytest.raises(ValueError):
-        swell.coupons.uses.create({"code": "123", "code_id": "123"})
+        swell.coupon_uses.create({"code": "123", "code_id": "123"})
 
 def test_fails_with_no_count(swell):
     """Tests fail when no code_id is provided"""
 
     with pytest.raises(ValueError):
-        swell.coupons.uses.create({"parent_id": "123", "code": "123"})
+        swell.coupon_uses.create({"parent_id": "123", "code": "123"})
 
 
 @vcr.use_cassette('tests/vcr_cassettes/uses/test-delete-coupon-use.yml')
 def test_delete_coupon_use(swell, use_keys):
     """Tests deleting an coupon use"""
 
-    response = swell.coupons.uses.list()
+    response = swell.coupon_uses.list()
     first_coupon_use_id = response['results'][0]['id']
 
     assert isinstance(first_coupon_use_id, str)
     
-    delete_response = swell.coupons.uses.delete(first_coupon_use_id)
+    delete_response = swell.coupon_uses.delete(first_coupon_use_id)
     assert set(use_keys).issubset(delete_response.keys()), "All keys should be in the response"
 
 
@@ -144,11 +144,11 @@ def test_failed_with_no_id_delete_coupon_use(swell):
     """Test fails when no id provided to delete a coupon use"""
 
     with pytest.raises(Exception):
-        swell.coupons.uses.delete(123)
+        swell.coupon_uses.delete(123)
 
 
 def test_failed_with_incorrect_id_type_delete_coupon_use(swell):
     """Test fails when incorrect id type provided to delete an coupon use"""
 
     with pytest.raises(TypeError):
-        swell.coupons.uses.delete(123)
+        swell.coupon_uses.delete(123)

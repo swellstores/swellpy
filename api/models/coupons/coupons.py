@@ -11,6 +11,4 @@ class Coupons(Base):
         super().__init__(swell, 'coupons', required_fields=['discounts', 'name', 'codes'])
 
         self._swell = swell
-        self.generations = CouponGenerations(swell)
-        self.uses = CouponUses(swell)
         

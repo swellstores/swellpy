@@ -1,6 +1,11 @@
 # Swell-Py - Headless ecommerce Python API wrapper
-Author: [Greg Hoskin](mailto:greg@swell.is)
 
+## Maintainers:
+[Greg Hoskin](mailto:greg@swell.is)
+
+[Mustafa Hoda](mailto:mustafa@swell.is)
+
+## Overview
 > This library implements a convenient wrapper for Swell's [Backend API](https://swell.store/docs/api) 
 and is authorized with a private key making it ideal for server-side use. 
 You should only use the Backend API server-side, and keep your secret keys 
@@ -42,8 +47,8 @@ from swell-py import Swell
 2. Instantiate a new Swell instance:
 ```python
     swell = Swell({
-        store_id= "SWELL_STORE_ID",
-        api_key= "SWELL_API_KEY"
+        store_id: "SWELL_STORE_ID",
+        api_key: "SWELL_API_KEY"
     )}
 ```
 
@@ -79,4 +84,18 @@ handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+
+
+
+```
+
+```
+   _
+  | |
+  | |
+ /^^^\
+(_____)
+   )
+ \(_)/ 
+
 ```
