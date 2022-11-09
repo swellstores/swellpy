@@ -1,5 +1,4 @@
 from ..base import Base
-from .debits import Debits
 
 class Giftcards(Base):
     """Gift cards are a store of value that can be spent on purchases or redeemed for account credit.
@@ -10,4 +9,3 @@ class Giftcards(Base):
         super().__init__(swell, 'giftcards', required_fields=['amount'])
 
         self._swell = swell
-        self.debits = Debits(swell)

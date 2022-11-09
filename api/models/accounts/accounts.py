@@ -15,6 +15,3 @@ class Accounts(Base):
         super().__init__(swell, 'accounts', required_fields=['email'])
 
         self._swell = swell
-        self.addresses = AccountAddresses(swell)
-        self.credits = AccountCredits(swell)
-        self.cards = AccountCards(swell)

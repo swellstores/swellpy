@@ -11,7 +11,7 @@ def generation_keys():
 def test_list_generations(swell):
     """Tests list all generations"""
 
-    response = swell.coupons.generations.list()
+    response = swell.coupon_generations.list()
 
     assert isinstance(response, dict)
     assert isinstance(response['results'], list)
@@ -24,7 +24,7 @@ def test_list_generations_date_filter(swell):
 
     timestamp = datetime.now()
 
-    date_filtered = swell.coupons.generations.list({
+    date_filtered = swell.coupon_generations.list({
         "date_created": { "$gte": timestamp },
     })
 
@@ -40,7 +40,7 @@ def test_list_generations_with_return_limit(swell):
     """Tests list generations return limit"""
 
     limit = 1
-    response = swell.coupons.generations.list({"limit": limit})
+    response = swell.coupon_generations.list({"limit": limit})
     results_length = len(response['results'])
 
     assert isinstance(response, dict)
@@ -54,7 +54,7 @@ def test_list_generations_with_return_limit(swell):
 def test_list_generations_expansion(swell):
     """Tests generations expansion param is correctly sent"""
 
-    response = swell.coupons.generations.list({"expand": ["parent"]})
+    response = swell.coupon_generations.list({"expand": ["parent"]})
     parent = response['results'][0]['parent']
 
     assert isinstance(parent, dict)
@@ -64,10 +64,10 @@ def test_list_generations_expansion(swell):
 def test_get_generations_by_coupon_id(swell, generation_keys):
     """Tests get generations by coupon id"""
 
-    response = swell.coupons.generations.list()
+    response = swell.coupon_generations.list()
     first_coupon_id = response['results'][0]['id']
     
-    id_response = swell.coupons.generations.get(first_coupon_id)
+    id_response = swell.coupon_generations.get(first_coupon_id)
 
     assert set(generation_keys).issubset(id_response.keys()), "All keys should be in the response"
 
@@ -76,18 +76,18 @@ def test_fails_with_incorrect_id_get_coupon_generations(swell):
     """Test fails with incorrect id type during get coupon generations"""
 
     with pytest.raises(TypeError):
-        swell.coupons.generations.get(123)
+        swell.coupon_generations.get(123)
 
 
 @vcr.use_cassette('tests/vcr_cassettes/generations/test-get-generations-expanded.yml')
 def test_get_coupon_generations_expanded(swell, generation_keys):
     """Tests get coupon generations expanded"""
 
-    response = swell.coupons.generations.list()
+    response = swell.coupon_generations.list()
     first_coupon_id = response['results'][0]['id']
     generation_keys.append('parent')
 
-    id_response = swell.coupons.generations.get(first_coupon_id, { "expand": ['parent'] })
+    id_response = swell.coupon_generations.get(first_coupon_id, { "expand": ['parent'] })
 
     assert set(generation_keys).issubset(id_response.keys()), "All keys should be in the response"
 
@@ -96,7 +96,7 @@ def test_get_coupon_generations_expanded(swell, generation_keys):
 def test_create_coupon_generation(swell, generation_keys):
     """Tests create new coupon generation"""
 
-    response = swell.coupons.generations.list()
+    response = swell.coupon_generations.list()
     first_coupon_id = response['results'][0]['id']
     
     new_coupon_generation = {
@@ -104,7 +104,7 @@ def test_create_coupon_generation(swell, generation_keys):
         'count': 50
     }
 
-    response = swell.coupons.generations.create(new_coupon_generation)
+    response = swell.coupon_generations.create(new_coupon_generation)
 
     assert set(generation_keys).issubset(response.keys()), "All keys should be in the response"
     assert isinstance(response['id'], str)
@@ -115,13 +115,13 @@ def test_fails_with_no_id(swell):
     """Tests fail when no parent id is provided"""
 
     with pytest.raises(ValueError):
-        swell.coupons.generations.create({"count": 100})
+        swell.coupon_generations.create({"count": 100})
 
 def test_fails_with_no_count(swell):
     """Tests fail when no count is provided"""
 
     with pytest.raises(ValueError):
-        swell.coupons.generations.create({"parent_id": "123"})
+        swell.coupon_generations.create({"parent_id": "123"})
 
 
 
@@ -129,7 +129,7 @@ def test_fails_with_no_count(swell):
 # def test_update_coupon_generation(swell, generation_keys):
 #     """Tests updating an coupon generation"""
 
-#     response = swell.coupons.generations.list()
+#     response = swell.coupon_generations.list()
 #     first_coupon_generation_id = response['results'][0]['id']
     
 #     updates = {
@@ -137,7 +137,7 @@ def test_fails_with_no_count(swell):
 #         "count": 25
 #     }
 
-#     update_response = swell.coupons.generations.update(updates)
+#     update_response = swell.coupon_generations.update(updates)
 #     assert set(generation_keys).issubset(update_response.keys())
 #     assert update_response["count"] == updates["count"]
 
@@ -146,26 +146,26 @@ def test_fails_with_no_id_update_coupon_generation(swell):
     """Tests fails with missing id during coupon generation update"""
 
     with pytest.raises(Exception):
-        swell.coupons.generations.update({ "count": 50 })
+        swell.coupon_generations.update({ "count": 50 })
 
 
 def test_fails_with_incorrect_id_update_coupon_generation(swell):
     """Tests fails with incorrect id type during coupon generation update"""
 
     with pytest.raises(TypeError):
-        swell.coupons.generations.update({ "id": 123, "count": 50})
+        swell.coupon_generations.update({ "id": 123, "count": 50})
 
 
 @vcr.use_cassette('tests/vcr_cassettes/generations/test-delete-coupon-generation.yml')
 def test_delete_coupon_generation(swell, generation_keys):
     """Tests deleting an coupon generation"""
 
-    response = swell.coupons.generations.list()
+    response = swell.coupon_generations.list()
     first_coupon_generation_id = response['results'][0]['id']
 
     assert isinstance(first_coupon_generation_id, str)
     
-    delete_response = swell.coupons.generations.delete(first_coupon_generation_id)
+    delete_response = swell.coupon_generations.delete(first_coupon_generation_id)
     assert set(generation_keys).issubset(delete_response.keys()), "All keys should be in the response"
 
 
@@ -173,11 +173,11 @@ def test_failed_with_no_id_delete_coupon_generation(swell):
     """Test fails when no id provided to delete a coupon generation"""
 
     with pytest.raises(Exception):
-        swell.coupons.generations.delete(123)
+        swell.coupon_generations.delete(123)
 
 
 def test_failed_with_incorrect_id_type_delete_coupon_generation(swell):
     """Test fails when incorrect id type provided to delete an coupon generation"""
 
     with pytest.raises(TypeError):
-        swell.coupons.generations.delete(123)
+        swell.coupon_generations.delete(123)
