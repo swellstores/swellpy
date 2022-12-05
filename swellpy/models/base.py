@@ -1,4 +1,4 @@
-from api.utilities import handle_requests_response
+from ..utilities import handle_requests_response
 from typing import Optional
 
 class Base():
