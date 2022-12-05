@@ -1,4 +1,4 @@
-# Swell-Py - Headless ecommerce Python API wrapper
+# SwellPy - Headless ecommerce Python API wrapper
 
 ## Maintainers:
 [Greg Hoskin](mailto:greg@swell.is)
@@ -39,9 +39,9 @@ This may evolve to return individual classes with advanced processing and method
 
 ## Getting Setup
 
-1. Import Swell-Py
+1. Import SwellPy
 ```python
-from swell-py import Swell
+from swellpy import Swell
 ```
 
 2. Instantiate a new Swell instance:
@@ -84,18 +84,3 @@ handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-
-
-
-```
-
-```
-   _
-  | |
-  | |
- /^^^\
-(_____)
-   )
- \(_)/ 
-
-```
