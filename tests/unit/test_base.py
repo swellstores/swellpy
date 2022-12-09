@@ -4,6 +4,9 @@ from api.models.base import Base
 import logging
 class TestBaseClass(unittest.TestCase):
 
+    # def test():
+    #     print("HI")
+
     @classmethod
     def setUp(cls):
         class SessionMock:
