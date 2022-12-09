@@ -44,7 +44,7 @@ This may evolve to return individual classes with advanced processing and method
 from swellpy import Swell
 ```
 
-2. Instantiate a new Swell instance:
+2. Instantiate a new Swell instance
 ```python
     swell = Swell({
         store_id: "SWELL_STORE_ID",
@@ -62,6 +62,12 @@ response = swell.products.create({'name': '1234567'})
 [Swell](https://www.swell.is) is a customizable, API-first platform for powering 
 modern B2C/B2B shopping experiences and marketplaces. Build and connect anything 
 using your favorite technologies, and provide admins with an easy to use dashboard.
+
+## Test Coverage
+You can easily run Test Coverage report with the following command:
+```
+pytest --cov-report term-missing --cov=. ./tests/unit
+```
 
 ## Documentation
 
