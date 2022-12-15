@@ -1,7 +1,7 @@
 from asyncio import events
 import unittest
-from api.models.events import Events
-from api.models.base import Base
+from swellpy.models.events import Events
+from swellpy.models.base import Base
 
 class TestEvents(unittest.TestCase):
 

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from api.models.base import Base
+from swellpy.models.base import Base
 import logging
 class TestBaseClass(unittest.TestCase):
 

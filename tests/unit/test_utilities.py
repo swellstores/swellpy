@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 from urllib.error import HTTPError
-from api.utilities import handle_requests_response
+from swellpy.utilities import handle_requests_response
 from unittest.mock import patch
 from requests.exceptions import HTTPError
 class TestUtils(unittest.TestCase):
