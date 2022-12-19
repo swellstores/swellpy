@@ -31,6 +31,7 @@ from .models.returns import Returns
 from .models.shipments import Shipments
 from .models.webhooks import Webhooks
 
+
 class Swell:
     """
     The Swell class provides convenient access to Swell's API
@@ -39,7 +40,7 @@ class Swell:
 
     def __init__(
         self,
-        params
+        params  # TODO: Add type hinting here
     ):
         """
         Initialize a Swell class instance
@@ -55,9 +56,10 @@ class Swell:
                 "All Swell API methods require a store id and API key."
                 "See https://developers.swell.is/backend-api/authentication"
                 "for how to retrieve an API key from Swell"
-        )
+            )
 
-        s = sessions.BaseUrlSession(base_url=f'https://{store_id}:{api_key}@api.swell.store')
+        s = sessions.BaseUrlSession(
+            base_url=f'https://{store_id}:{api_key}@api.swell.store')
         self._base_url = s.base_url
 
         session = requests.Session()
@@ -69,30 +71,30 @@ class Swell:
         self.logger.addHandler(logging.NullHandler())
 
 
-        self.products = Products(self)
-        self.stock = ProductStock(self)
-        self.variants = ProductVariants(self)
         self.accounts = Accounts(self)
+        self.attributes = Attributes(self)
         self.addresses = AccountAddresses(self)
-        self.credits = AccountCredits(self)
         self.cards = AccountCards(self)
         self.carts = Carts(self)
-        self.orders = Orders(self)
+        self.categories = Categories(self)
         self.coupons = Coupons(self)
-        self.coupon_uses = CouponUses(self)
         self.coupon_generations = CouponGenerations(self)
+        self.coupon_uses = CouponUses(self)
+        self.credits = AccountCredits(self)
+        self.debits = Debits(self)
+        self.events = Events(self)
+        self.giftcards = Giftcards(self) 
+        self.invoices = Invoices(self)
+        self.orders = Orders(self)
+        self.payments = Payments(self)
+        self.products = Products(self)
         self.promotions = Promotions(self)
         self.promotion_uses = PromotionUses(self)
-        self.giftcards = Giftcards(self) 
-        self.debits = Debits(self)
-        self.categories = Categories(self)
-        self.attributes = Attributes(self)
         self.purchase_links = PurchaseLinks(self)
-        self.invoices = Invoices(self)
-        self.events = Events(self)
-        self.subscriptions = Subscriptions(self)
-        self.payments = Payments(self)
         self.refunds = Refunds(self)
         self.returns = Returns(self)
         self.shipments = Shipments(self)
+        self.stock = ProductStock(self)
+        self.subscriptions = Subscriptions(self)
+        self.variants = ProductVariants(self)
         self.webhooks = Webhooks(self)

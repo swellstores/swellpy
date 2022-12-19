@@ -1,5 +1,7 @@
-from functools import lru_cache
+from ..utilities import handle_requests_response
 from typing import Optional
+from ratelimit import limits, sleep_and_retry
+
 
 from swellpy.utilities import handle_requests_response
 
@@ -20,8 +22,14 @@ class Base():
         self.name = name
         self.endpoint = kwargs['endpoint'] if 'endpoint' in kwargs else self.name
         self.required_fields = kwargs['required_fields'] if 'required_fields' in kwargs else None
+        
 
-    @lru_cache(maxsize=128)
+    @sleep_and_retry
+    # TODO: modify these values and place into a configuration file
+    @limits(calls=2, period=1)
+    def check_limit(self):
+        return
+
     def list(self, params: Optional[dict] = None) -> dict:
         """Lists all items in the collection
 
@@ -37,12 +45,14 @@ class Base():
             JSON response, including results array and item count.
 
         """
+        self.check_limit()
 
         response = self._swell._session.get(
             url=f'{self._swell._base_url}/{self.endpoint}', params=params)
-        return handle_requests_response(self._swell, response)
 
-    @lru_cache(maxsize=128)
+        return handle_requests_response(self._swell, response)
+        
+
     def get(self, id: str, params: Optional[dict] = None) -> dict:
         """Retrieve a specific item in a collection
 
@@ -61,6 +71,8 @@ class Base():
             raise Exception(f"id must be included to get a {self.name}")
         elif not isinstance(id, str):
             raise TypeError("id must be a string")
+
+        self.check_limit()
 
         response = self._swell._session.get(
             url=f'{self._swell._base_url}/{self.endpoint}/{id}', params=params)
@@ -86,10 +98,13 @@ class Base():
                     raise ValueError(
                         f"'{field}' must be provided to create a {self.name}")
 
+        self.check_limit()
+
         response = self._swell._session.post(
             url=f'{self._swell._base_url}/{self.endpoint}/', json=payload)
 
         return handle_requests_response(self._swell, response)
+
 
     def update(self, payload: dict) -> dict:
         """Update a specific item in the collection
@@ -108,10 +123,14 @@ class Base():
         elif not isinstance(payload['id'], str):
             raise TypeError("id must be a string")
 
+        self.check_limit()
+
         response = self._swell._session.put(
             url=f'{self._swell._base_url}/{self.endpoint}/{payload["id"]}', json=payload)
 
+
         return handle_requests_response(self._swell, response)
+        
 
     def delete(self, id: str) -> dict:
         """Delete a specific item in the collection
@@ -127,6 +146,8 @@ class Base():
             raise ValueError(f"id must be included for {self.name} deletion")
         elif not isinstance(id, str):
             raise TypeError("id must be a string")
+
+        self.check_limit()
 
         response = self._swell._session.delete(
             url=f'{self._swell._base_url}/{self.endpoint}/{id}')
