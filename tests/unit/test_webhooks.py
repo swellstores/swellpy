@@ -1,8 +1,8 @@
 from asyncio import events
 import unittest
 from unittest.mock import MagicMock
-from api.models.webhooks import Webhooks
-from api.models.base import Base
+from swellpy.models.webhooks import Webhooks
+from swellpy.models.base import Base
 
 
 class TestEvents(unittest.TestCase):
