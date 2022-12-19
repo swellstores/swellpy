@@ -41,3 +41,6 @@ venv.bak/
 
 # Test file
 test_app.py
+
+# VS Code
+.vscode

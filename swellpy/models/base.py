@@ -1,15 +1,18 @@
-from ..utilities import handle_requests_response
+from functools import lru_cache
 from typing import Optional
+
+from swellpy.utilities import handle_requests_response
+
 
 class Base():
     """A set of common, public request methods from which all module-specific classes extend.
-    
+
     Subclasses may override existing methods or define their own (ie orders.convert_cart_to_order)
 
     Args:
         Required fields (required): required fields for creating a new instance
         Endpoint: optional parameter to specify API endpoint, otherwise defaults to the model name.
-    
+
     """
 
     def __init__(self, swell, name, **kwargs):
@@ -18,10 +21,10 @@ class Base():
         self.endpoint = kwargs['endpoint'] if 'endpoint' in kwargs else self.name
         self.required_fields = kwargs['required_fields'] if 'required_fields' in kwargs else None
 
-    
+    @lru_cache(maxsize=128)
     def list(self, params: Optional[dict] = None) -> dict:
         """Lists all items in the collection
-        
+
         An object containing query parameters can be passed to filter the collection's results. In addition, 
         'expand' and 'include' parameters can be passed to include linked collections and additional data.
 
@@ -35,13 +38,14 @@ class Base():
 
         """
 
-        response = self._swell._session.get(url=f'{self._swell._base_url}/{self.endpoint}', params=params)
+        response = self._swell._session.get(
+            url=f'{self._swell._base_url}/{self.endpoint}', params=params)
         return handle_requests_response(self._swell, response)
 
-
+    @lru_cache(maxsize=128)
     def get(self, id: str, params: Optional[dict] = None) -> dict:
         """Retrieve a specific item in a collection
-        
+
         An id (or slug if available) is passed to retrieve a specific item in a collection.
 
         Args:
@@ -57,11 +61,11 @@ class Base():
             raise Exception(f"id must be included to get a {self.name}")
         elif not isinstance(id, str):
             raise TypeError("id must be a string")
-            
-        response = self._swell._session.get(url=f'{self._swell._base_url}/{self.endpoint}/{id}', params=params)
+
+        response = self._swell._session.get(
+            url=f'{self._swell._base_url}/{self.endpoint}/{id}', params=params)
 
         return handle_requests_response(self._swell, response)
-
 
     def create(self, payload: dict) -> dict:
         """Create a new item in the collection
@@ -72,18 +76,20 @@ class Base():
         Returns:
             JSON representation of the newly-created item with initiatlized fields
         """
+
         if not payload:
             raise ValueError("Payload must be provided")
 
         if self.required_fields:
             for field in self.required_fields:
                 if not field in payload:
-                    raise ValueError(f"'{field}' must be provided to create a {self.name}")
+                    raise ValueError(
+                        f"'{field}' must be provided to create a {self.name}")
 
-        response = self._swell._session.post(url=f'{self._swell._base_url}/{self.endpoint}/', json=payload)
+        response = self._swell._session.post(
+            url=f'{self._swell._base_url}/{self.endpoint}/', json=payload)
 
         return handle_requests_response(self._swell, response)
-
 
     def update(self, payload: dict) -> dict:
         """Update a specific item in the collection
@@ -91,7 +97,7 @@ class Base():
         Args:
             id: (string, required) id of the item in the collection to update
             payload: object containing the fields to update
-        
+
         Returns:
             JSON representation of the updated item
 
@@ -101,15 +107,15 @@ class Base():
             raise Exception(f"id must be included for {self.name} update")
         elif not isinstance(payload['id'], str):
             raise TypeError("id must be a string")
-            
-        response = self._swell._session.put(url=f'{self._swell._base_url}/{self.endpoint}/{payload["id"]}', json=payload)
+
+        response = self._swell._session.put(
+            url=f'{self._swell._base_url}/{self.endpoint}/{payload["id"]}', json=payload)
 
         return handle_requests_response(self._swell, response)
 
-
     def delete(self, id: str) -> dict:
         """Delete a specific item in the collection
-        
+
         Args:
             id: (string, required) id of the item in the collection to delete
 
@@ -121,8 +127,8 @@ class Base():
             raise ValueError(f"id must be included for {self.name} deletion")
         elif not isinstance(id, str):
             raise TypeError("id must be a string")
-        
-        response = self._swell._session.delete(url=f'{self._swell._base_url}/{self.endpoint}/{id}')
+
+        response = self._swell._session.delete(
+            url=f'{self._swell._base_url}/{self.endpoint}/{id}')
 
         return handle_requests_response(self._swell, response)
-    
