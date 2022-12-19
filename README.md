@@ -1,50 +1,58 @@
 # SwellPy - Headless ecommerce Python API wrapper
 
-## Maintainers:
+## Authors/ Maintainers
 [Greg Hoskin](mailto:greg@swell.is)
 
 [Mustafa Hoda](mailto:mustafa@swell.is)
 
+
 ## Overview
 > This library implements a convenient wrapper for Swell's [Backend API](https://swell.store/docs/api) 
 and is authorized with a private key making it ideal for server-side use. 
-You should only use the Backend API server-side, and keep your secret keys 
-stored as environment variables.
 
-The api-wrapper library is built broad and shallow, meaning the full set of 
-Swell API endpoints are available and minimal processing is performed for each. 
+All Swell API endpoints and available actions are made available. 
 In general, you can expect get(), list(), update(), create() and delete() 
 methods for each resource. Additional methods (orders.convert_cart_to_order) 
 will be documented while unavailable ones will throw an exception (events.delete).
 
 Authentication only needs to be passed once, during initialization. Errors returned
-from Swell and missing arguments pased to methods are loudly surfaced and will 
+from Swell are surfaced as log warnings while missing arguments will 
 throw an exception. 
 
-In terms of implementation, each resoure extends from the base model, and 
-overwrites, adds or disables methods as needed. Only the minimum required fields
-are checked and will throw an exception if missing.
+In terms of implementation, each resoure extends from a base model, and 
+overwrites, adds or disables methods as needed. 
 
-Otherwise, a non-opinionated approach is taken to Swell implementation. For example,
-it's usually a good idea to generate subscriptions indrectly from orders with 
-products containing purchase options. However, subscription plans can also be 
-generated directly using the /subscriptions endpoint, which is also included here.
-A notable exception are the create/delete operations on events, which are always 
-read-only, and have been disabled.
+Otherwise, a non-opinionated approach is taken, allowing you to call the Swell API
+as needed. For example, it's oftena a good idea to generate subscriptions from orders with 
+a product containing that purchase option. However, subscription plans can also be 
+generated directly using the /subscriptions endpoint, which is also available.
 
+Rate limiting and caching (LRU) are also included for better performance.
 
 Currently, all responses are python dictionaries generated from requests.json().
 This may evolve to return individual classes with advanced processing and methods.
 
 
-## Getting Setup
 
-1. Import SwellPy
+## Getting Setup
+1. Clone SwellPy and build locally
+```
+git clone git@github.com:swellstores/swellpy.git
+
+python -m build
+```
+
+2. Install and Import
+
+```
+pip install [relative path to swellpy]
+```
+
 ```python
 from swellpy import Swell
 ```
 
-2. Instantiate a new Swell instance
+3. Instantiate a new Swell instance
 ```python
     swell = Swell({
         store_id: "SWELL_STORE_ID",
@@ -52,9 +60,10 @@ from swellpy import Swell
     )}
 ```
 
-3. Request resource
+4. Request resource
 ```python
-response = swell.products.create({'name': '1234567'})
+response = swell.products.create({'name': 'my-product-slug'})
+print(response) # or setup logging (see below)
 ```
 
 **About Swell**
@@ -63,15 +72,11 @@ response = swell.products.create({'name': '1234567'})
 modern B2C/B2B shopping experiences and marketplaces. Build and connect anything 
 using your favorite technologies, and provide admins with an easy to use dashboard.
 
-## Test Coverage
-You can easily run Test Coverage report with the following command:
-```
-pytest --cov-report term-missing --cov=. ./tests/unit
-```
 
 ## Documentation
 
 📖  [**View Swell Backend API Documentation**](https://developers.swell.is/backend-api/introduction)
+
 
 ## Handling log messages
 
