@@ -1,6 +1,4 @@
 from ..base import Base
-from .generations import CouponGenerations
-from .uses import CouponUses
 
 class Coupons(Base):
     """Coupons are a way to offer customers a discount with a coupon code. 
