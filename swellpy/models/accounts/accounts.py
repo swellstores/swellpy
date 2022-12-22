@@ -1,7 +1,4 @@
 from ..base import Base
-from .addresses import AccountAddresses
-from .credits import AccountCredits
-from .cards import AccountCards
 
 class Accounts(Base):
     """Accounts represent a customer's current information and their interactions with your store.

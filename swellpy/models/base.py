@@ -2,10 +2,6 @@ from ..utilities import handle_requests_response
 from typing import Optional
 from ratelimit import limits, sleep_and_retry
 
-
-from swellpy.utilities import handle_requests_response
-
-
 class Base():
     """A set of common, public request methods from which all module-specific classes extend.
 
