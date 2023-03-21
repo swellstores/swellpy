@@ -18,14 +18,10 @@ class Base:
         self.name = name
         self.endpoint = kwargs['endpoint'] if 'endpoint' in kwargs else self.name
         self.required_fields = kwargs['required_fields'] if 'required_fields' in kwargs else None
-        
-        RATE_LIMIT_CALLS = self._swell.rate_limit_calls
-        RATE_LIMIT_PERIOD = self._swell.rate_limit_period
-        print(RATE_LIMIT_CALLS, RATE_LIMIT_PERIOD)
 
         @sleep_and_retry
-        @limits(calls=RATE_LIMIT_CALLS, period=RATE_LIMIT_PERIOD)
-        def check_limit(self):
+        @limits(calls=self._swell.rate_limit_calls, period=self._swell.rate_limit_period)
+        def check_limit():
             return
         
         self.check_limit = check_limit
@@ -45,7 +41,7 @@ class Base:
             JSON response, including results array and item count.
 
         """
-        self.check_limit(self)
+        self.check_limit()
 
         response = self._swell._session.get(
             url=f'{self._swell._base_url}/{self.endpoint}', params=params)
@@ -72,7 +68,7 @@ class Base:
         elif not isinstance(id, str):
             raise TypeError("id must be a string")
 
-        self.check_limit(self)
+        self.check_limit()
 
         response = self._swell._session.get(
             url=f'{self._swell._base_url}/{self.endpoint}/{id}', params=params)
@@ -98,7 +94,7 @@ class Base:
                     raise ValueError(
                         f"'{field}' must be provided to create a {self.name}")
 
-        self.check_limit(self)
+        self.check_limit()
 
         response = self._swell._session.post(
             url=f'{self._swell._base_url}/{self.endpoint}/', json=payload)
@@ -123,7 +119,7 @@ class Base:
         elif not isinstance(payload['id'], str):
             raise TypeError("id must be a string")
 
-        self.check_limit(self)
+        self.check_limit()
 
         response = self._swell._session.put(
             url=f'{self._swell._base_url}/{self.endpoint}/{payload["id"]}', json=payload)
@@ -147,7 +143,7 @@ class Base:
         elif not isinstance(id, str):
             raise TypeError("id must be a string")
 
-        self.check_limit(self)
+        self.check_limit()
 
         response = self._swell._session.delete(
             url=f'{self._swell._base_url}/{self.endpoint}/{id}')

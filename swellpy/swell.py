@@ -47,7 +47,6 @@ class Swell:
         """
         store_id = params['store_id']
         api_key = params['api_key']
-        options = params['options']
         class APIKeyMissingError(Exception):
             pass
 
@@ -65,11 +64,14 @@ class Swell:
         session = requests.Session()
         session.auth = (store_id, api_key)
         self._session = session
+        self.rate_limit_calls = 1
+        self.rate_limit_period = 1
 
-        if (options):
-            if (options["rate_limit_calls"]):
+        if ("options" in params):
+            options = params["options"]
+            if ("rate_limit_calls" in options):
                 self.rate_limit_calls = options["rate_limit_calls"]
-            if (options["rate_limit_period"]):
+            if ("rate_limit_period" in options):
                 self.rate_limit_period = options["rate_limit_period"]
 
         self.logger = logging.getLogger(__name__)
