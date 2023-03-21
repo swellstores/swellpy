@@ -2,6 +2,9 @@ from ..utilities import handle_requests_response
 from typing import Optional
 from ratelimit import limits, sleep_and_retry
 
+global RATE_LIMIT_CALLS, RATE_LIMIT_PERIOD
+RATE_LIMIT_CALLS=1
+RATE_LIMIT_PERIOD=1
 class Base():
     """A set of common, public request methods from which all module-specific classes extend.
 
@@ -19,10 +22,14 @@ class Base():
         self.endpoint = kwargs['endpoint'] if 'endpoint' in kwargs else self.name
         self.required_fields = kwargs['required_fields'] if 'required_fields' in kwargs else None
         
+        
+        RATE_LIMIT_CALLS = self._swell.rate_limit_calls
+        RATE_LIMIT_PERIOD = self._swell.rate_limit_period
+        print(RATE_LIMIT_CALLS, RATE_LIMIT_PERIOD)
 
     @sleep_and_retry
     # TODO: modify these values and place into a configuration file
-    @limits(calls=2, period=1)
+    @limits(calls=RATE_LIMIT_CALLS, period=RATE_LIMIT_PERIOD)
     def check_limit(self):
         return
 
