@@ -2,7 +2,7 @@ from ..utilities import handle_requests_response
 from typing import Optional
 from ratelimit import limits, sleep_and_retry
 
-class Base():
+class Base:
     """A set of common, public request methods from which all module-specific classes extend.
 
     Subclasses may override existing methods or define their own (ie orders.convert_cart_to_order)
@@ -18,13 +18,13 @@ class Base():
         self.name = name
         self.endpoint = kwargs['endpoint'] if 'endpoint' in kwargs else self.name
         self.required_fields = kwargs['required_fields'] if 'required_fields' in kwargs else None
-        
 
-    @sleep_and_retry
-    # TODO: modify these values and place into a configuration file
-    @limits(calls=2, period=1)
-    def check_limit(self):
-        return
+        @sleep_and_retry
+        @limits(calls=self._swell.rate_limit_calls, period=self._swell.rate_limit_period)
+        def check_limit():
+            return
+        
+        self.check_limit = check_limit
 
     def list(self, params: Optional[dict] = None) -> dict:
         """Lists all items in the collection

@@ -73,6 +73,20 @@ modern B2C/B2B shopping experiences and marketplaces. Build and connect anything
 using your favorite technologies, and provide admins with an easy to use dashboard.
 
 
+## Initialization Options
+When creating a Swell instance, you can pass initialization options for the 
+desired amount of rate limiting (by # of calls and period)
+
+```python
+swell = Swell({
+    "store_id": "SWELL_STORE_ID",
+    "api_key": "SWELL_API_KEY"
+    "options": {
+        "rate_limit_calls": 2,
+        "rate_limit_period": 1
+    }
+})
+```
 ## Documentation
 
 📖  [**View Swell Backend API Documentation**](https://developers.swell.is/backend-api/introduction)
