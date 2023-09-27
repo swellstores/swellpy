@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import pytest
-from api import Swell
+from swellpy import Swell
 
 load_dotenv()
 
