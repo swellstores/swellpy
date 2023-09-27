@@ -44,7 +44,7 @@ class Base:
         self.check_limit()
 
         response = self._swell._session.get(
-            url=f'{self._swell._base_url}/{self.endpoint}', params=params)
+            url=f'{self._swell._base_url}/{self.endpoint}', json=params)
 
         return handle_requests_response(self._swell, response)
         
@@ -71,7 +71,7 @@ class Base:
         self.check_limit()
 
         response = self._swell._session.get(
-            url=f'{self._swell._base_url}/{self.endpoint}/{id}', params=params)
+            url=f'{self._swell._base_url}/{self.endpoint}/{id}', json=params)
 
         return handle_requests_response(self._swell, response)
 

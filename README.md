@@ -1,11 +1,5 @@
 # SwellPy - Headless ecommerce Python API wrapper
 
-## Authors/ Maintainers
-[Greg Hoskin](mailto:greg@swell.is)
-
-[Mustafa Hoda](mailto:mustafa@swell.is)
-
-
 ## Overview
 > This library implements a convenient wrapper for Swell's [Backend API](https://swell.store/docs/api) 
 and is authorized with a private key making it ideal for server-side use. 
@@ -32,67 +26,80 @@ Rate limiting and caching (LRU) are also included for better performance.
 Currently, all responses are python dictionaries generated from requests.json().
 This may evolve to return individual classes with advanced processing and methods.
 
+## Prerequisites
 
+1. Install [pyenv](https://github.com/pyenv/pyenv#installation)
 
 ## Getting Setup
-1. Clone SwellPy and build locally
-```
+
+1. Clone SwellPy and build the project
+```bash
 git clone git@github.com:swellstores/swellpy.git
+cd swellpy
+pyenv install -s
 
-python -m build
+pip3 install -r requirements.txt
+python3 -m build
 ```
 
-2. Install and Import
+2. Install and import the package locally
 
+```bash
+pip3 install dist/swellpy-0.0.1.tar.gz
 ```
-pip install [relative path to swellpy]
-```
-
-```python
-from swellpy import Swell
-```
-
-3. Instantiate a new Swell instance
-```python
-    swell = Swell({
-        store_id: "SWELL_STORE_ID",
-        api_key: "SWELL_API_KEY"
-    )}
-```
-
-4. Request resource
-```python
-response = swell.products.create({'name': 'my-product-slug'})
-print(response) # or setup logging (see below)
-```
-
-**About Swell**
-
-[Swell](https://www.swell.is) is a customizable, API-first platform for powering 
-modern B2C/B2B shopping experiences and marketplaces. Build and connect anything 
-using your favorite technologies, and provide admins with an easy to use dashboard.
-
 
 ## Initialization Options
-When creating a Swell instance, you can pass initialization options for the 
+When creating a Swell instance, you can pass initialization options for the
 desired amount of rate limiting (by # of calls and period)
 
 ```python
+from swellpy import Swell
+
 swell = Swell({
-    "store_id": "SWELL_STORE_ID",
-    "api_key": "SWELL_API_KEY"
-    "options": {
-        "rate_limit_calls": 2,
-        "rate_limit_period": 1
-    }
+  "store_id": "SWELL_STORE_ID",
+  "api_key": "SWELL_API_KEY",
+  "options": {
+    "rate_limit_calls": 2,
+    "rate_limit_period": 1,
+  },
 })
 ```
-## Documentation
 
-📖  [**View Swell Backend API Documentation**](https://developers.swell.is/backend-api/introduction)
+### List
 
+```python
+query = {
+  "date_created": {
+    "$gte": "2022-09-25T00:00:00.000Z"
+  },
+  "expand": ["items.product", "shipments:100"],
+}
+response = swell.orders.list(query)
+print(response)
+```
 
-## Handling log messages
+### Create
+
+```python
+data = {
+  "name": "T-Shirt",
+  "price": 99.00,
+  "active": True,
+  "options": [
+    {
+      "name": "Size",
+      "values": [
+        { "name": "Small" },
+        { "name": "Large" },
+      ],
+    },
+  ],
+}
+response = swell.products.create(data)
+print(response)
+```
+
+## Logging
 
 SwellPy uses the standard Logging library to log HTTP requests (DEBUG level).
 To capture these logs, a handler can be configured as shown:
@@ -109,3 +116,14 @@ handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+```
+
+## Documentation
+
+📖  [**View Swell Backend API Documentation**](https://developers.swell.is/backend-api/introduction)
+
+**About Swell**
+
+[Swell](https://www.swell.is) is a customizable, API-first platform for powering
+modern B2C/B2B shopping experiences and marketplaces. Build and connect anything
+using your favorite technologies, and provide admins with an easy to use dashboard.
