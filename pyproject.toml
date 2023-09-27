@@ -13,7 +13,7 @@ name="swellpy"
 version="0.0.1"
 description = "Python API Wrapper for Swell"
 classifiers = ["Programming Language :: Python :: 3"]
-authors = [{ name="Greg Hoskin", email="greg@swell.is"}, { "name"="Musafa Hoda", email="mustafa@swell.is"}]
+authors = [{ name="Greg Hoskin" }, { "name"="Musafa Hoda" }]
 dependencies = [
    "requests",
    "requests-toolbelt",
